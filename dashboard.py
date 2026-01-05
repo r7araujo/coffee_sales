@@ -24,7 +24,7 @@ col1, col2, col3 = st.columns(3)
 with col1:
     st.metric("Faturamento total", f"R{invoicing:,.2f}")
 with col2:
-    st.metric("Media mensal", f"R{m:,.2f}")
+    st.metric("Media mensal", f"R{m1:,.2f}")
 with col3:
     st.metric("Ticket médio", f"R{ticket:,.2f}")
 st.divider()
