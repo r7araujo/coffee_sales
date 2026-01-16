@@ -1,4 +1,4 @@
-import pandas as pd, streamlit as st, altair as alt
+import pandas as pd, streamlit as st, altair as alt, plotly.express as px
 #carregando os bancos de dados
 dataset = pd.read_excel('coffee_sales.xlsx')
 by_coffee = pd.read_csv('by_coffee.csv')
@@ -128,9 +128,7 @@ graph4 = alt.Chart(long_coffee_month[long_coffee_month['Coffee_name'].isin(top_c
     color=alt.Color('Coffee_name',title='Café')   
 )
 st.subheader('Destaques e anomalias')
-
 col_lines, col_top_coffees = st.columns([2,1])
-
 with col_lines:
     st.altair_chart(graph4, use_container_width=True)
 with col_top_coffees:
@@ -140,3 +138,26 @@ with col_top_coffees:
             st.info(mensagem)
     else:
         st.success('Não houve pico de vendas ou anomalia para nenhum café.')
+
+m2 = by_weekday['money'].mean()
+by_weekday['meta'] = by_weekday['money'].apply(lambda x: 'Abaixo da média' if x < (m2 * 0.8) else ('Acima da média' if x > (m2 * 1.2) else 'Na média'))
+colors2 = alt.Scale(domain=['Abaixo da média', 'Acima da média', 'Na média'], range=['red','green','blue'])
+graph5 = alt.Chart(by_weekday).mark_bar().encode(
+    x=alt.X('Weekday', title='Dia da semana'),
+    y=alt.Y('money', title='Faturamento'),
+    color=alt.Color('meta', scale=colors2, title='Legenda'),
+    tooltip=['Weekday', 'money']
+)
+tot_by_time = by_time_of_day[['Morning','Afternoon','Night']].sum().reset_index()
+tot_by_time.columns = ['periodo', 'total']
+graph6 = px.pie(
+    tot_by_time,
+    values='total',
+    names='periodo'
+)
+st.subheader('Vendas em dias de semana e períodos do dia')
+col_weekday, col_timeday = st.columns([2,1])
+with col_weekday:
+    st.altair_chart(graph5, use_container_width=True)
+with col_timeday:
+    st.plotly_chart(graph6)
