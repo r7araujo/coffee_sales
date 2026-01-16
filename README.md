@@ -1,7 +1,8 @@
 # Coffee Shop Sales Dashboard ☕
 
 Este projeto é um dashboard interativo desenvolvido em Python para analisar as vendas de uma cafeteria. O objetivo é identificar padrões de consumo por horário (Manhã, Tarde, Noite) e analisar a eficiência financeira dos produtos.
-O banco de dados foi retirado do Kaggle
+
+O banco de dados foi retirado do Kaggle.
 
 ## 📊 Funcionalidades do Projeto
 
