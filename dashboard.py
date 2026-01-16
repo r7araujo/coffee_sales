@@ -110,6 +110,7 @@ with col_infos:
     st.altair_chart(graph3, use_container_width=True)
 
 top_list = []
+top_coffee = []
 for coffee in long_coffee_month['Coffee_name'].unique():
     data_coffee = long_coffee_month[long_coffee_month['Coffee_name'] == coffee]
     mean_coffee = data_coffee['faturamento'].mean()
@@ -120,17 +121,18 @@ for coffee in long_coffee_month['Coffee_name'].unique():
         name_date = pd.to_datetime(row['mes'])
         name_date = name_date.strftime('%b-%Y')
         top_list.append(f'{coffee} teve um pico em {name_date}')
-graph4 = alt.Chart(long_coffee_month).mark_line().encode(
+        top_coffee.append(coffee)
+graph4 = alt.Chart(long_coffee_month[long_coffee_month['Coffee_name'].isin(top_coffee)]).mark_line().encode(
     x=alt.X('mes', title='Mês'),
     y=alt.Y('faturamento', title='Faturamento'),
     color=alt.Color('Coffee_name',title='Café')   
 )
-
-col_lines, col_top_coffees = st.columns([2,1])
 st.subheader('Destaques e anomalias')
 
+col_lines, col_top_coffees = st.columns([2,1])
+
 with col_lines:
-    st.altair_chart(graph4, use_container_width=True) # continuar daqui
+    st.altair_chart(graph4, use_container_width=True)
 with col_top_coffees:
     if top_list:
         st.write('Meses em que algum café teve destaque: ')
@@ -138,4 +140,3 @@ with col_top_coffees:
             st.info(mensagem)
     else:
         st.success('Não houve pico de vendas ou anomalia para nenhum café.')
-    
